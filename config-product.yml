@@ -4,35 +4,86 @@ spring:
         
 ---
 server:
-    port: 6001  # 端口号
+    port: 8001  # 端口号
+mybatis:
+    config-location: classpath:mybatis/mybatis.cfg.xml
+    type-aliases-package: com.zr.domain
+    mapper-locations: classpath:mybatis/mapper/**/*.xml
+#根据该name在以后的服务之间相互调用
 spring:
     profiles: dev   # 开发环境
     application:
-        name: config_eureka
+        name: product-config
+
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/ssm?useUnicode=true&characterEncoding=utf8
+        username: root
+        password: 123456
+        dbcp2:
+            #最小维持连接数
+            min-idle: 5
+            #初始化连接数
+            initial-size: 5
+            #最大连接数
+            max-total: 5
+            #等待链接获取的最大超时时间
+            max-wait-millis: 150
+
+# Eureka客户端相关配置
 eureka:
-    instance:
-        hostname:eureka6001.com
     client:
-        registerWithEureka: false
-        fetchRegistry: false
-        serviceUrl:
-            defaultZone: http://eureka6001.com:6001/eureka/
-    server:
-        enable-self-preservation: false # 禁用自我保护机制
+        register-with-eureka: true  # 服务注册开关
+        fetch-registry: true  # 服务发现开关
+        service-url: # 注册到哪个Eureka Server 服务注册中心，多个中心用逗号分隔
+      # 单机版Eureka服务注册中心
+#           defaultZone: http://localhost:6001/eureka
+      # 集群版Eureka服务注册中心
+            defaultZone: http://eureka6002.com:6002/eureka/,http://eureka6001.com:6001/eureka/
+    instance:
+        instance-id: ${spring.application.name}:${server.port}  # 指定实例ID
+        prefer-ip-address: true # 访问路径可以显示IP地址
+
 ---
 server:
-    port: 6001  # 端口号
+    port: 8001  # 端口号
+mybatis:
+    config-location: classpath:mybatis/mybatis.cfg.xml
+    type-aliases-package: com.zr.domain
+    mapper-locations: classpath:mybatis/mapper/**/*.xml
+#根据该name在以后的服务之间相互调用
 spring:
     profiles: prod   # 生产环境
     application:
-        name: config_eureka
+        name: product-config
+
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/ssm?useUnicode=true&characterEncoding=utf8
+        username: root
+        password: 123456
+        dbcp2:
+            #最小维持连接数
+            min-idle: 5
+            #初始化连接数
+            initial-size: 5
+            #最大连接数
+            max-total: 5
+            #等待链接获取的最大超时时间
+            max-wait-millis: 150
+
+# Eureka客户端相关配置
 eureka:
-    instance:
-        hostname:eureka6001.com
     client:
-        registerWithEureka: false
-        fetchRegistry: false
-        serviceUrl:
-            defaultZone: http://eureka6001.com:6001/eureka/
-    server:
-        enable-self-preservation: true # 开启自我保护机制
+        register-with-eureka: true  # 服务注册开关
+        fetch-registry: true  # 服务发现开关
+        service-url: # 注册到哪个Eureka Server 服务注册中心，多个中心用逗号分隔
+      # 单机版Eureka服务注册中心
+#           defaultZone: http://localhost:6001/eureka
+      # 集群版Eureka服务注册中心
+            defaultZone: http://eureka6002.com:6002/eureka/,http://eureka6001.com:6001/eureka/
+    instance:
+        instance-id: ${spring.application.name}:${server.port}  # 指定实例ID
+        prefer-ip-address: true # 访问路径可以显示IP地址
